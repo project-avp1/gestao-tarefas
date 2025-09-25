@@ -50,6 +50,3 @@ php artisan serve
 # acesse http://127.0.0.1:8000
 ```
 
----
-
-Agora você pode começar a desenvolver, criar tarefas e testar o sistema localmente.
