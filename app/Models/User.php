@@ -45,4 +45,12 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+    /**
+     * Get the tarefas for the user.
+     */
+    public function tarefas()
+    {
+        return $this->hasMany(\App\Models\Tarefa::class);
+    }
 }
