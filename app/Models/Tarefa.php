@@ -12,8 +12,17 @@ class Tarefa extends Model
     protected $fillable = [
         'titulo',
         'descricao',
-        'data_vencimento', 
+        'data_vencimento',
         'status',
-        'user_id'
+        'user_id',
     ];
+
+    protected $casts = [
+        'data_vencimento' => 'date',
+    ];
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 }
