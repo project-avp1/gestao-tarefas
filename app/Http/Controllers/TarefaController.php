@@ -11,7 +11,7 @@ class TarefaController extends Controller
 
     public function index(Request $request)
     {
-        $query = Tarefa::where('user_id', 1);
+        $query = Tarefa::where('user_id', Auth::id());
 
         if ($request->has('status') && $request->status != '') {
             $query->where('status', $request->status);
@@ -42,7 +42,7 @@ class TarefaController extends Controller
             'descricao' => $request->descricao,
             'data_vencimento' => $request->data_vencimento,
             'status' => 'pendente',
-            'user_id' => 1, // Temporário para teste
+            'user_id' => Auth::id(),
         ]);
 
         return redirect()->route('tarefas.index')
@@ -52,7 +52,7 @@ class TarefaController extends Controller
 
     public function show(Tarefa $tarefa)
     {
-        if ($tarefa->user_id !== 1) {
+        if ($tarefa->user_id !== Auth::id()) {
             abort(403);
         }
 
@@ -62,7 +62,7 @@ class TarefaController extends Controller
 
     public function edit(Tarefa $tarefa)
     {
-        if ($tarefa->user_id !== 1) {
+        if ($tarefa->user_id !== Auth::id()) {
             abort(403);
         }
 
@@ -72,7 +72,7 @@ class TarefaController extends Controller
 
     public function update(Request $request, Tarefa $tarefa)
     {
-        if ($tarefa->user_id !== 1) {
+        if ($tarefa->user_id !== Auth::id()) {
             abort(403);
         }
 
@@ -95,7 +95,7 @@ class TarefaController extends Controller
 
     public function destroy(Tarefa $tarefa)
     {
-        if ($tarefa->user_id !== 1) {
+        if ($tarefa->user_id !== Auth::id()) {
             abort(403);
         }
 
@@ -108,7 +108,7 @@ class TarefaController extends Controller
 
     public function toggleStatus(Tarefa $tarefa)
     {
-        if ($tarefa->user_id !== 1) {
+        if ($tarefa->user_id !== Auth::id()) {
             abort(403);
         }
 
