@@ -5,6 +5,7 @@ use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
+<<<<<<< HEAD
     return view('welcome');
 });
 
@@ -14,6 +15,17 @@ Route::resource('tarefas', TarefaController::class);
 // Rota para alternar status da tarefa (temporário sem middleware)
 Route::patch('tarefas/{tarefa}/toggle-status', [TarefaController::class, 'toggleStatus'])
     ->name('tarefas.toggle-status');
+=======
+    return redirect()->route('tarefas.index');
+});
+
+Route::middleware('auth')->group(function () {
+    Route::resource('tarefas', TarefaController::class);
+
+    Route::patch('tarefas/{tarefa}/toggle-status', [TarefaController::class, 'toggleStatus'])
+        ->name('tarefas.toggle-status');
+});
+>>>>>>> b3a1dab (Primeiro commit do projeto Laravel)
 
 Route::get('/dashboard', function () {
     return view('dashboard');

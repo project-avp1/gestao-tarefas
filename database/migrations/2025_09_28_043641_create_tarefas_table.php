@@ -11,6 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
+<<<<<<< HEAD
+=======
+        // Evita erro caso a tabela já exista por uma migração anterior
+        if (Schema::hasTable('tarefas')) {
+            return;
+        }
+
+>>>>>>> b3a1dab (Primeiro commit do projeto Laravel)
         Schema::create('tarefas', function (Blueprint $table) {
             $table->id();
             $table->string('titulo');

@@ -19,6 +19,7 @@
             @include('layouts.navigation')
 
             <!-- Page Heading -->
+<<<<<<< HEAD
             @isset($header)
                 <header class="bg-white shadow">
                     <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
@@ -30,6 +31,27 @@
             <!-- Page Content -->
             <main>
                 {{ $slot }}
+=======
+            @if (trim($__env->yieldContent('header')) || isset($header))
+                <header class="bg-white shadow">
+                    <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
+                        @hasSection('header')
+                            @yield('header')
+                        @elseif(isset($header))
+                            {{ $header }}
+                        @endif
+                    </div>
+                </header>
+            @endif
+
+            <!-- Page Content -->
+            <main>
+                @hasSection('content')
+                    @yield('content')
+                @elseif(isset($slot))
+                    {{ $slot }}
+                @endif
+>>>>>>> b3a1dab (Primeiro commit do projeto Laravel)
             </main>
         </div>
     </body>
