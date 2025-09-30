@@ -29,9 +29,10 @@
                                 class="text-2xl font-bold {{ $tarefa->status == 'concluida' ? 'line-through text-gray-500' : 'text-gray-900' }}">
                                 {{ $tarefa->titulo }}
                             </h1>
-                            <span
-                                class="px-3 py-1 rounded-full text-sm {{ $tarefa->status == 'concluida' ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800' }}">
-                                {{ ucfirst($tarefa->status) }}
+                            <span class="px-3 py-1 rounded-full text-sm 
+                                        {{ $tarefa->status == 'concluida' ? 'bg-green-100 text-green-800' :
+        ($tarefa->status == 'em_andamento' ? 'bg-blue-100 text-blue-800' : 'bg-yellow-100 text-yellow-800') }}">
+                                {{ ucfirst(str_replace('_', ' ', $tarefa->status)) }}
                             </span>
                         </div>
 
@@ -56,29 +57,6 @@
                                 <div class="bg-gray-50 p-4 rounded">
                                     <h3 class="font-medium text-gray-700 mb-2">Data de Vencimento</h3>
                                     <p class="text-gray-600">{{ $tarefa->data_vencimento->format('d/m/Y') }}</p>
-
-                                    @if($tarefa->status == 'pendente')
-                                        @php
-                                            $diasRestantes = now()->diffInDays($tarefa->data_vencimento, false);
-                                        @endphp
-
-                                        @if($diasRestantes < 0)
-                                            <p class="text-red-600 text-sm mt-1">
-                                                Atrasada há {{ abs($diasRestantes) }}
-                                                {{ abs($diasRestantes) == 1 ? 'dia' : 'dias' }}
-                                            </p>
-                                        @elseif($diasRestantes == 0)
-                                            <p class="text-orange-600 text-sm mt-1">Vence hoje!</p>
-                                        @elseif($diasRestantes <= 3)
-                                            <p class="text-orange-600 text-sm mt-1">
-                                                Vence em {{ $diasRestantes }} {{ $diasRestantes == 1 ? 'dia' : 'dias' }}
-                                            </p>
-                                        @else
-                                            <p class="text-green-600 text-sm mt-1">
-                                                Faltam {{ $diasRestantes }} dias
-                                            </p>
-                                        @endif
-                                    @endif
                                 </div>
                             @endif
                         </div>
@@ -98,8 +76,11 @@
                                 @csrf
                                 @method('PATCH')
                                 <button type="submit"
-                                    class="px-4 py-2 rounded font-medium {{ $tarefa->status == 'pendente' ? 'bg-green-500 hover:bg-green-700 text-white' : 'bg-yellow-500 hover:bg-yellow-700 text-white' }}">
-                                    {{ $tarefa->status == 'pendente' ? 'Marcar como Concluída' : 'Marcar como Pendente' }}
+                                    class="px-4 py-2 rounded font-medium 
+                                            {{ $tarefa->status == 'pendente' ? 'bg-blue-500 hover:bg-blue-700 text-white' :
+        ($tarefa->status == 'em_andamento' ? 'bg-green-500 hover:bg-green-700 text-white' : 'bg-yellow-500 hover:bg-yellow-700 text-white') }}">
+                                    {{ $tarefa->status == 'pendente' ? 'Iniciar Tarefa' :
+        ($tarefa->status == 'em_andamento' ? 'Marcar como Concluída' : 'Marcar como Pendente') }}
                                 </button>
                             </form>
 

@@ -43,16 +43,14 @@
 
                         <x-slot name="content">
                             <x-dropdown-link :href="route('profile.edit')">
-                                {{ __('Profile') }}
-                            </x-dropdown-link>
-
-                            <!-- Authentication -->
+                                {{ __('Perfil') }}
+                            </x-dropdown-link> <!-- Authentication -->
                             <form method="POST" action="{{ route('logout') }}">
                                 @csrf
 
                                 <x-dropdown-link :href="route('logout')" onclick="event.preventDefault();
-                                                        this.closest('form').submit();">
-                                    {{ __('Log Out') }}
+                                                            this.closest('form').submit();">
+                                    {{ __('Sair') }}
                                 </x-dropdown-link>
                             </form>
                         </x-slot>
@@ -61,11 +59,11 @@
             @else
                 <div class="hidden sm:flex sm:items-center sm:space-x-4 sm:ms-6">
                     <a href="{{ route('login') }}" class="text-sm font-medium text-gray-600 hover:text-gray-900">
-                        {{ __('Log in') }}
+                        {{ __('Entrar') }}
                     </a>
                     @if (Route::has('register'))
                         <a href="{{ route('register') }}" class="text-sm font-medium text-gray-600 hover:text-gray-900">
-                            {{ __('Register') }}
+                            {{ __('Cadastrar') }}
                         </a>
                     @endif
                 </div>
@@ -108,7 +106,7 @@
 
                 <div class="mt-3 space-y-1">
                     <x-responsive-nav-link :href="route('profile.edit')">
-                        {{ __('Profile') }}
+                        {{ __('Perfil') }}
                     </x-responsive-nav-link>
 
                     <!-- Authentication -->
@@ -116,8 +114,8 @@
                         @csrf
 
                         <x-responsive-nav-link :href="route('logout')" onclick="event.preventDefault();
-                                                this.closest('form').submit();">
-                            {{ __('Log Out') }}
+                                                    this.closest('form').submit();">
+                            {{ __('Sair') }}
                         </x-responsive-nav-link>
                     </form>
                 </div>
@@ -126,12 +124,12 @@
             <div class="pt-4 pb-1 border-t border-gray-200">
                 <div class="px-4 space-y-3">
                     <x-responsive-nav-link :href="route('login')">
-                        {{ __('Log in') }}
+                        {{ __('Entrar') }}
                     </x-responsive-nav-link>
 
                     @if (Route::has('register'))
                         <x-responsive-nav-link :href="route('register')">
-                            {{ __('Register') }}
+                            {{ __('Cadastrar') }}
                         </x-responsive-nav-link>
                     @endif
                 </div>
