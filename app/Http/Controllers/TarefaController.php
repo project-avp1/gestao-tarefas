@@ -112,13 +112,23 @@ class TarefaController extends Controller
             abort(403);
         }
 
-        $tarefa->update([
-            'status' => $tarefa->status === 'pendente' ? 'concluida' : 'pendente'
-        ]);
+        // Ciclo de status: pendente -> em_andamento -> concluida -> pendente
+        $novoStatus = match ($tarefa->status) {
+            'pendente' => 'em_andamento',
+            'em_andamento' => 'concluida',
+            'concluida' => 'pendente',
+            default => 'pendente'
+        };
 
-        $message = $tarefa->status === 'concluida' ? 'Tarefa marcada como concluída!' : 'Tarefa marcada como pendente!';
+        $tarefa->update(['status' => $novoStatus]);
+
+        $mensagens = [
+            'pendente' => 'Tarefa marcada como pendente!',
+            'em_andamento' => 'Tarefa em andamento!',
+            'concluida' => 'Tarefa concluída!'
+        ];
 
         return redirect()->route('tarefas.index')
-            ->with('success', $message);
+            ->with('success', $mensagens[$novoStatus]);
     }
 }

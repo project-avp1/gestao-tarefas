@@ -28,6 +28,9 @@
                                 <option value="pendente" {{ request('status') == 'pendente' ? 'selected' : '' }}>
                                     Pendentes
                                 </option>
+                                <option value="em_andamento" {{ request('status') == 'em_andamento' ? 'selected' : '' }}>
+                                    Em Andamento
+                                </option>
                                 <option value="concluida" {{ request('status') == 'concluida' ? 'selected' : '' }}>
                                     Concluídas
                                 </option>
@@ -52,75 +55,80 @@
                     @if($tarefas->count() > 0)
                         <div class="space-y-4">
                             @foreach($tarefas as $tarefa)
-                                <div
-                                    class="border rounded-lg p-4 {{ $tarefa->status == 'concluida' ? 'bg-green-50' : 'bg-white' }}">
-                                    <div class="flex justify-between items-start">
-                                        <div class="flex-1">
-                                            <h3
-                                                class="text-lg font-semibold {{ $tarefa->status == 'concluida' ? 'line-through text-gray-500' : 'text-gray-900' }}">
-                                                {{ $tarefa->titulo }}
-                                            </h3>
-                                            @if($tarefa->descricao)
-                                                <p class="text-gray-600 mt-2">{{ $tarefa->descricao }}</p>
-                                            @endif
+                                        <div
+                                            class="border rounded-lg p-4 {{ $tarefa->status == 'concluida' ? 'bg-green-50' : ($tarefa->status == 'em_andamento' ? 'bg-blue-50' : 'bg-white') }}">
+                                            <div class="flex justify-between items-start">
+                                                <div class="flex-1">
+                                                    <h3
+                                                        class="text-lg font-semibold {{ $tarefa->status == 'concluida' ? 'line-through text-gray-500' : 'text-gray-900' }}">
+                                                        {{ $tarefa->titulo }}
+                                                    </h3>
+                                                    @if($tarefa->descricao)
+                                                        <p class="text-gray-600 mt-2">{{ $tarefa->descricao }}</p>
+                                                    @endif
 
-                                            <div class="flex items-center gap-4 mt-3 text-sm text-gray-500">
-                                                <span
-                                                    class="px-2 py-1 rounded-full text-xs {{ $tarefa->status == 'concluida' ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800' }}">
-                                                    {{ ucfirst($tarefa->status) }}
-                                                </span>
+                                                    <div class="flex items-center gap-4 mt-3 text-sm text-gray-500">
+                                                        <span
+                                                            class="px-2 py-1 rounded-full text-xs 
+                                                                        {{ $tarefa->status == 'concluida' ? 'bg-green-100 text-green-800' :
+                                ($tarefa->status == 'em_andamento' ? 'bg-blue-100 text-blue-800' : 'bg-yellow-100 text-yellow-800') }}">
+                                                            {{ ucfirst(str_replace('_', ' ', $tarefa->status)) }}
+                                                        </span>
 
-                                                @if($tarefa->data_vencimento)
-                                                    <span>
-                                                        <strong>Vence em:</strong>
-                                                        {{ $tarefa->data_vencimento->format('d/m/Y') }}
-                                                    </span>
-                                                @endif
+                                                        @if($tarefa->data_vencimento)
+                                                            <span>
+                                                                <strong>Vence em:</strong>
+                                                                {{ $tarefa->data_vencimento->format('d/m/Y') }}
+                                                            </span>
+                                                        @endif
 
-                                                <span>
-                                                    <strong>Criada em:</strong>
-                                                    {{ $tarefa->created_at->format('d/m/Y H:i') }}
-                                                </span>
+                                                        <span>
+                                                            <strong>Criada em:</strong>
+                                                            {{ $tarefa->created_at->format('d/m/Y H:i') }}
+                                                        </span>
+                                                    </div>
+                                                </div>
+
+                                                <div class="flex gap-2 ml-4">
+                                                    <!-- Botão Toggle Status -->
+                                                    <form method="POST" action="{{ route('tarefas.toggle-status', $tarefa) }}"
+                                                        class="inline">
+                                                        @csrf
+                                                        @method('PATCH')
+                                                        <button type="submit"
+                                                            class="px-3 py-1 text-sm rounded 
+                                                                        {{ $tarefa->status == 'pendente' ? 'bg-blue-500 hover:bg-blue-700 text-white' :
+                                ($tarefa->status == 'em_andamento' ? 'bg-green-500 hover:bg-green-700 text-white' : 'bg-yellow-500 hover:bg-yellow-700 text-white') }}">
+                                                            {{ $tarefa->status == 'pendente' ? 'Iniciar' :
+                                ($tarefa->status == 'em_andamento' ? 'Concluir' : 'Reabrir') }}
+                                                        </button>
+                                                    </form>
+
+                                                    <!-- Botão Ver -->
+                                                    <a href="{{ route('tarefas.show', $tarefa) }}"
+                                                        class="bg-blue-500 hover:bg-blue-700 text-white px-3 py-1 text-sm rounded">
+                                                        Ver
+                                                    </a>
+
+                                                    <!-- Botão Editar -->
+                                                    <a href="{{ route('tarefas.edit', $tarefa) }}"
+                                                        class="bg-yellow-500 hover:bg-yellow-700 text-white px-3 py-1 text-sm rounded">
+                                                        Editar
+                                                    </a>
+
+                                                    <!-- Botão Excluir -->
+                                                    <form method="POST" action="{{ route('tarefas.destroy', $tarefa) }}" class="inline"
+                                                        onsubmit="return confirm('Tem certeza que deseja excluir esta tarefa?')">
+                                                        @csrf
+                                                        @method('DELETE')
+                                                        <button type="submit"
+                                                            class="bg-red-500 hover:bg-red-700 text-white px-3 py-1 text-sm rounded">
+                                                            Excluir
+                                                        </button>
+                                                    </form>
+                                                </div>
                                             </div>
                                         </div>
-
-                                        <div class="flex gap-2 ml-4">
-                                            <!-- Botão Toggle Status -->
-                                            <form method="POST" action="{{ route('tarefas.toggle-status', $tarefa) }}"
-                                                class="inline">
-                                                @csrf
-                                                @method('PATCH')
-                                                <button type="submit"
-                                                    class="px-3 py-1 text-sm rounded {{ $tarefa->status == 'pendente' ? 'bg-green-500 hover:bg-green-700 text-white' : 'bg-yellow-500 hover:bg-yellow-700 text-white' }}">
-                                                    {{ $tarefa->status == 'pendente' ? 'Concluir' : 'Reabrir' }}
-                                                </button>
-                                            </form>
-
-                                            <!-- Botão Ver -->
-                                            <a href="{{ route('tarefas.show', $tarefa) }}"
-                                                class="bg-blue-500 hover:bg-blue-700 text-white px-3 py-1 text-sm rounded">
-                                                Ver
-                                            </a>
-
-                                            <!-- Botão Editar -->
-                                            <a href="{{ route('tarefas.edit', $tarefa) }}"
-                                                class="bg-yellow-500 hover:bg-yellow-700 text-white px-3 py-1 text-sm rounded">
-                                                Editar
-                                            </a>
-
-                                            <!-- Botão Excluir -->
-                                            <form method="POST" action="{{ route('tarefas.destroy', $tarefa) }}" class="inline"
-                                                onsubmit="return confirm('Tem certeza que deseja excluir esta tarefa?')">
-                                                @csrf
-                                                @method('DELETE')
-                                                <button type="submit"
-                                                    class="bg-red-500 hover:bg-red-700 text-white px-3 py-1 text-sm rounded">
-                                                    Excluir
-                                                </button>
-                                            </form>
-                                        </div>
-                                    </div>
-                                </div>
                             @endforeach
                         </div>
 
